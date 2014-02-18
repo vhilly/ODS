@@ -1,0 +1,121 @@
+<html>
+	<head>
+<meta charset="UTF-8">
+		<title>Push notification server streaming on a MySQL db</title>
+		<style>
+			dd,dt {
+				float:left;
+				margin:0;
+				padding:5px;
+				clear:both;
+				display:block;
+				width:100%;
+
+			}
+			dt {
+				background:#ddd;
+			}
+			time {
+				color:gray;
+			}
+		</style>
+	</head>
+	<body>
+        <time></time>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <script>
+        var chart; 
+        var series=[];
+        var socket = io.connect('http://172.31.1.112:8000');
+        socket.on('connect',function(){
+          socket.emit('join','test');
+        });
+
+       socket.on('graph',function(data){
+         var perhr={};
+         var temp='';
+         $.each(data.chartdata,function(k,v){
+           if(v.id==0)
+            return;
+           if(v.id != temp){
+             var obj={name:v.name,data:{}};
+             perhr[v.id]=obj;
+           }
+           perhr[v.id].data[v.hr]=v.cnt;
+           temp=v.id;
+         });
+           //console.log(perhr);
+         $.each(perhr,function(k,v){
+           var chartdata=[];
+           var name = v.name;
+           for(x=0;x<23;x++){
+             if(v.data[x]){
+               chartdata.push(v.data[x]);
+             }else{
+               chartdata.push(0);
+             }
+           }
+           series.push({name:name,data:chartdata})
+         });
+         loadChart(series);
+       });
+
+      socket.on('seriesUpdate',function(data){
+        ch=chart.series[data.chart[0]-1].data[data.chart[1]];
+        ch.update(ch.y+1);
+      });
+    function loadChart(series){
+      var options = {
+            chart: {
+               renderTo: 'chart',
+            },
+            title: {
+                text: 'No. of Orders Per Hour',
+                x: -20 //center
+            },
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            xAxis: {
+                type:'datetime',
+                dateTimeLabelFormats : {
+                 hour: '%I %p',
+                },
+            },
+            yAxis: {
+                title: {
+                    text: 'No. Of Orders'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series:series
+         };
+         chart = new Highcharts.Chart(options);
+    }
+
+      $('#test').click(function(){
+        chart.series[1].data[1].update(1);
+      });
+    </script>
+
+
+
+    </body>
+</html>

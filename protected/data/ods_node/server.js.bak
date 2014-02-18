@@ -1,0 +1,93 @@
+var app = require('http').createServer(handler),
+  io = require('socket.io').listen(app),
+  fs = require('fs'),
+  mysql = require('mysql'),
+  connectionsArray = [],
+  connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'mysqladmin',
+    database: 'online_delivery',
+    port: 3306
+  }),
+  POLLING_INTERVAL = 3000,
+  pollingTimer;
+
+connection.connect(function(err) {
+  console.log(err);
+});
+
+app.listen(8000);
+
+function handler(req, res) {
+  fs.readFile(__dirname + '/client.html', function(err, data) {
+    if (err) {
+      console.log(err);
+      res.writeHead(500);
+      return res.end('Error loading client.html');
+    }
+    res.writeHead(200);
+    res.end(data);
+  });
+}
+
+
+var pollingLoop = function() {
+
+  // Doing the database query
+  var query = connection.query('SELECT o.id id,c.name cname,c.phone_1 tel,o.branch_name branch_name,status,date_ordered,date_updated FROM orders o,customers c  WHERE o.customer_id=c.id AND status IN (0,1,2,3)'),
+    orders = []; // this array will contain the result of our db query
+
+  // setting the query listeners
+  query
+    .on('error', function(err) {
+      // Handle error, and 'end' event will be emitted after this as well
+      console.log(err);
+      updateSockets(err);
+    })
+    .on('result', function(order) {
+      // it fills our array looping on each user row inside the db
+      orders.push(order);
+    })
+    .on('end', function() {
+      // loop on itself only if there are sockets still connected
+      if (connectionsArray.length) {
+        pollingTimer = setTimeout(pollingLoop, POLLING_INTERVAL);
+
+        updateSockets({
+          orders: orders
+        });
+      }
+    });
+
+};
+
+
+io.sockets.on('connection', function(socket) {
+
+  console.log('Number of connections:' + connectionsArray.length);
+  if (!connectionsArray.length) {
+    pollingLoop();
+  }
+
+  socket.on('disconnect', function() {
+    var socketIndex = connectionsArray.indexOf(socket);
+    console.log('socket = ' + socketIndex + ' disconnected');
+    if (socketIndex >= 0) {
+      connectionsArray.splice(socketIndex, 1);
+    }
+  });
+
+  console.log('A new socket is connected!');
+  connectionsArray.push(socket);
+
+});
+
+var updateSockets = function(data) {
+  // adding the time of the last update
+  data.time = new Date();
+  // sending new data to all the sockets connected
+  connectionsArray.forEach(function(tmpSocket) {
+    tmpSocket.volatile.emit('notification', data);
+  });
+};

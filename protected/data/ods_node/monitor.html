@@ -1,0 +1,69 @@
+<html>
+	<head>
+<meta charset="UTF-8">
+		<title>Push notification server streaming on a MySQL db</title>
+		<style>
+			dd,dt {
+				float:left;
+				margin:0;
+				padding:5px;
+				clear:both;
+				display:block;
+				width:100%;
+
+			}
+			dt {
+				background:#ddd;
+			}
+			time {
+				color:gray;
+			}
+		</style>
+	</head>
+	<body>
+        <time></time>
+        <div id="container">Loading ...</div>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        var chart; 
+        var series=[];
+        var socket = io.connect('http://172.31.1.112:8000');
+        socket.on('connect',function(){
+          socket.emit('join','test');
+        });
+        socket.on('notification', function (data) {
+          var ordersList = "<table border=1><tr><th>ORDER ID</th><th>CUSTOMER NAME</th><th>TEL NUMBER</th><th>ON QUEUE</th><th>DRIVER OUT</th><th>STATUS</th><th>SERVING BRANCH</th></tr>";
+          var delOut,status;
+          $.each(data.orders,function(index,order){
+            delOut='';
+            status='';
+            switch(order.status){
+              case 2:
+              delOut=order.date_updated
+              status='Driver Out';
+              break;
+            }
+            
+            ordersList += "<tr>" +
+                         "<td>"+ order.id + "</td>" +
+                         "<td>" + order.cname + "</td>" +
+                         "<td>" + order.tel + "</td>" +
+                         "<td>" + order.date_ordered + "</td>" +
+                         "<td>" + delOut + "</td>" +
+                         "<td>" + status + "</td>" +
+                         "<td>" + order.branch_name + "</td>" +
+                         "</tr>";
+        });
+        ordersList += "</table>";
+        $('#container').html(ordersList);
+      });
+
+    </script>
+
+
+
+    </body>
+</html>
