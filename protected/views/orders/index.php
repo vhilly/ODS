@@ -31,7 +31,7 @@
   
   $(document).on('click','.setRider',function(){
     $.ajax({
-      url:'".Yii::app()->createUrl('orders/update&id=')."'+$(this).data('order_id')+'&sid='+$(this).data('status_id')+'&rid='+$(this).data('rider_id'),
+      url:'".Yii::app()->createUrl('orders/update&id=')."'+$(this).data('order_id')+'&sid='+$(this).data('status_id')+'&rid='+$(this).data('rider_id')+'&rname='+$(this).html(),
       success:function(data){
         location.reload();
       },
@@ -161,9 +161,6 @@
             </tr>
           <?php endforeach;?>
           </tbody>
-          <tfoot>
-            <tr><td colspan=6><?=CHtml::link('See All','#')?></td></tr>
-          </tfoot>
         </table>
 
         <table class='table  table-order table-bordered'>
@@ -197,10 +194,6 @@
             </tr>
           <?php endforeach;?>
           </thead>
-          <tbody>
-          <tfoot>
-            <tr><td colspan=7><?=CHtml::link('See All','#')?></td></tr>
-          </tfoot>
         </table>
 
         <table id='churba' class='table table-order table-bordered'>
@@ -229,9 +222,6 @@
             </tr>
           <?php endforeach;?>
           </tbody>
-          <tfoot>
-            <tr><td colspan=6><?=CHtml::link('See All','#',array('class'=>'viewAll'))?></td></tr>
-          </tfoot>
         </table>
       </div>
     </div>

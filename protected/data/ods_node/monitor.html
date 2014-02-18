@@ -18,6 +18,9 @@
 			time {
 				color:gray;
 			}
+body { background-color:#FFECBA;}
+table  tr.overall-header >th {background-color:#BF0900;color:white;font-weight:bold;}
+table {background-color:#794716;color:white;font-weight:bold;}
 		</style>
 	</head>
 	<body>
@@ -35,15 +38,23 @@
           socket.emit('join','test');
         });
         socket.on('notification', function (data) {
-          var ordersList = "<table border=1><tr><th>ORDER ID</th><th>CUSTOMER NAME</th><th>TEL NUMBER</th><th>ON QUEUE</th><th>DRIVER OUT</th><th>STATUS</th><th>SERVING BRANCH</th></tr>";
-          var delOut,status;
+          var ordersList = "<table border=1><tr class=overall-header><th>ORDER ID</th><th>CUSTOMER NAME</th><th>TEL NUMBER</th><th>ON QUEUE</th><th>DRIVER OUT</th><th>STATUS</th><th>SERVING BRANCH</th><th>RIDER</th><th>AGENT</th></tr>";
+          var delOut,status,riderName;
           $.each(data.orders,function(index,order){
-            delOut='';
-            status='';
+            delOut='&nbsp;';
+            status='&nbsp;';
+            riderName='&nbsp;';
             switch(order.status){
+              case 0:
+              status=order.is_advance?'ADVANCE ORDER':'ON QUEUE';
+              break;
+              case 1:
+              status='ACCEPTED';
+              break;
               case 2:
-              delOut=order.date_updated
+              delOut=order.date_updated;
               status='Driver Out';
+              riderName=order.rider_name;
               break;
             }
             
@@ -55,6 +66,8 @@
                          "<td>" + delOut + "</td>" +
                          "<td>" + status + "</td>" +
                          "<td>" + order.branch_name + "</td>" +
+                         "<td>" + riderName+ "</td>" +
+                         "<td>" + order.agent_name+ "</td>" +
                          "</tr>";
         });
         ordersList += "</table>";
