@@ -1,0 +1,41 @@
+<?php 
+  class AppController extends Controller{
+
+    public function filters()
+    {
+        return array(
+            'rights', // perform access control for CRUD operations
+ 
+        );
+    }
+    
+    public function actionDashboard(){
+      $this->render('dashboard');
+    }
+    public function actionOrder_taker(){
+      $menu=Menu::model()->findAllByAttributes(array('deleted'=>0,'is_available'=>1));
+      $this->render('order_taker',compact('menu'));
+    }
+    public function actionMenu(){
+      $menu=Menu::model()->findAllByAttributes(array('deleted'=>0,'is_available'=>1));
+      $menuItems=MenuItems::model()->findAllByAttributes(array('deleted'=>0));
+      $menuItemList=array();
+      if(count($menuItems)){
+        foreach($menuItems as $mi){
+           $menuItemList[$mi->menu_id][] = $mi;
+        }
+      }
+      $this->render('menu',compact('menu','menuItemList'));
+    }
+    public function actionShowimage(){
+      $image = Menu::model()->findByPk($_GET['id']);
+      header('Content-type: image/png');
+      echo $image->img;
+      exit();
+    }
+    public function actionMap(){
+      $this->renderPartial('map');
+    }
+  }
+
+?>
