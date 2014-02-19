@@ -21,9 +21,9 @@ return array(
   public function actionView($id){
     $this->renderPartial('view',array('orders'=>$this->loadModel($id,array('orderItems.itemCheckList'))));
   }
-  public function actionUpdate($id,$sid,$rid=null){
+  public function actionUpdate($id,$sid,$rid=null,$rname=null){
     if($rid)
-      Orders::model()->updateAll(array( 'status' => $sid, 'date_updated' => new CDbExpression('NOW()'),'rider'=>$rid), "id= {$id}" );
+      Orders::model()->updateAll(array( 'status' => $sid, 'date_updated' => new CDbExpression('NOW()'),'rider'=>$rid,'rider_name'=>$rname), "id= {$id}" );
     else
       Orders::model()->updateAll(array( 'status' => $sid, 'date_updated' => new CDbExpression('NOW()')), "id= {$id}" );
   }
@@ -40,12 +40,12 @@ return array(
 
   public function actionIndex(){
     $branch= Yii::app()->getModule('user')->user()->profile->branch;
-    $orders=Orders::model()->findAllByAttributes(array('branch_id'=>$branch),array('condition'=>'status NOT IN (-2,0,4)'));
+    $orders=Orders::model()->findAllByAttributes(array('branch_id'=>$branch),array('condition'=>'status NOT IN (-2,4)'));
     $orderList=array();
     if($orders){
       foreach($orders as $o){
-        if($o->is_advance && $o->status==1)
-          $orderList['adv'][]=$o;
+        if($o->is_advance && $o->status==0)
+         $orderList['adv'][]=$o;
         else
           $orderList[$o->status][]=$o;
       }

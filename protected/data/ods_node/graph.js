@@ -45,7 +45,7 @@ function handler(req, res) {
 
 var updatedOrders = function() {
 
-  var query = connection.query('SELECT o.id id,c.name cname,c.phone_1 tel,o.branch_name branch_name,status,DATE_FORMAT(date_ordered,"%d-%m-%Y %H:%i:%s") date_ordered,DATE_FORMAT(date_updated,"%d-%m-%Y %H:%i:%s") date_updated,DATE_FORMAT(delivery_date,"%d-%m-%Y %H:%i:%s") delivery_date,o.is_advance FROM orders o,customers c  WHERE o.customer_id=c.id AND status IN (0,1,2,3) ORDER by o.is_advance ,date_ordered ASC'),
+  var query = connection.query('SELECT o.id id,c.name cname,c.phone_1 tel,o.branch_name branch_name,status,DATE_FORMAT(date_ordered,"%d-%m-%Y %H:%i:%s") date_ordered,DATE_FORMAT(date_updated,"%d-%m-%Y %H:%i:%s") date_updated,DATE_FORMAT(delivery_date,"%d-%m-%Y %H:%i:%s") delivery_date,o.is_advance is_advance,o.rider_name rider_name,o.agent_name agent_name FROM orders o,customers c  WHERE o.customer_id=c.id AND status IN (0,1,2,3) ORDER by o.is_advance ,date_ordered ASC'),
     orders = []; // this array will contain the result of our db query
 
   query

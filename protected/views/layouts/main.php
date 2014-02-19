@@ -7,6 +7,7 @@
 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
     <script type="text/javascript" src="http://172.31.1.112:8080/nowjs/now.js"></script>`
+    <script type="text/javascript" src="http://172.31.1.112:8000/socket.io/socket.io.js"></script>`
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css" />
 	<style>
 		* {
