@@ -28,7 +28,8 @@ function handler(req, res) {
     res.writeHead(200);
     res.end(data);
   });
-  }else{
+  }
+  if(req.url=='/monitor'){
   fs.readFile(__dirname + '/monitor.html', function(err, data) {
     if (err) {
       console.log(err);
