@@ -33,17 +33,6 @@
       }
     });
   });
-   now.ready(function(){
-    now.echoAsteriskData = function(data){
-        var reply = JSON.stringify(data);
-        console.log(data);
-        console.log(data.event);
-       if(data.event=='Newstate' && data.calleridnum=='1002'){
-        $('#customerPhone1').val(data.connectedlinenum);
-        $('#customerPhone1').change();
-       }
-    }
-   });
 
   ");
 ?>
@@ -250,7 +239,7 @@
        }
      }
   });
-  var socket = io.connect('http://172.31.1.112:8000');
+  var socket = io.connect('http://ryouko.imperium.jp:8000');
   }
   function windowpop(url, width, height) {
     var leftPosition, topPosition;

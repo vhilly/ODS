@@ -28,11 +28,14 @@
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
     <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <script>
+   var ts = Math.round(new Date().getTime() / 1000);
+       var tsNxtDay = ts + (24 * 3600);
         var chart; 
         var series=[];
         var socket = io.connect('http://ryouko.imperium.jp:8000');
         socket.on('connect',function(){
           socket.emit('join','test');
+          series=[];
         });
 
        socket.on('graph',function(data){
@@ -45,7 +48,7 @@
              var obj={name:v.name,data:{}};
              perhr[v.id]=obj;
            }
-           perhr[v.id].data[v.hr]=v.cnt;
+           perhr[v.id].data[v.hr*1000]=v.cnt;
            temp=v.id;
          });
            //console.log(perhr);
@@ -59,7 +62,7 @@
                chartdata.push(0);
              }
            }
-           series.push({name:name,data:chartdata})
+           series.push({ name:name,data:chartdata})
          });
          loadChart(series);
        });
@@ -70,6 +73,9 @@
       });
     function loadChart(series){
       var options = {
+           global: {
+              useUTC: false
+            },
             chart: {
                renderTo: 'chart',
             },
@@ -82,7 +88,10 @@
                 x: -20
             },
             xAxis: {
-                type:'datetime',
+              type:'datetime',
+              tickInterval: 3600 * 1000,
+              min: ts*1000,
+              max: tsNxtDay*1000,
                 dateTimeLabelFormats : {
                  hour: '%I %p',
                 },

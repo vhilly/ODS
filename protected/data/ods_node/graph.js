@@ -61,7 +61,7 @@ var updatedOrders = function() {
 
 }
 var updateGraph = function(socket){
-  var query2 = connection.query('SELECT b.id id,b.name,o.date_ordered dt,HOUR(o.date_ordered) as hr,count(o.id) cnt,IFNULL(SUM(o.total_amt ),0) amt '+
+  var query2 = connection.query('SELECT b.id id,b.name,UNIX_TIMESTAMP(DATE_FORMAT(o.date_ordered,"%Y-%m%-%d %H:0:0"))  as hr,count(o.id) cnt,IFNULL(SUM(o.total_amt ),0) amt '+
                                 'FROM branches b LEFT JOIN orders o '+
                                 'ON b.id = o.branch_id AND b.is_active=1 AND DATE(o.date_ordered) = CURDATE()'+
                                 'GROUP BY b.id,hr'),

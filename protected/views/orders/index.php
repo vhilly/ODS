@@ -59,7 +59,7 @@
        e.preventDefault();
      }
   });
-  var socket = io.connect('http://172.31.1.112:8000');
+  var socket = io.connect('http://ryouko.imperium.jp:8000');
   socket.emit('updateOrders');
 
   ");
