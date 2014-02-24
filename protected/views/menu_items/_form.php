@@ -40,6 +40,12 @@
 	   'type'=>'primary',
  	   'label'=>$model->isNewRecord ? 'Create' : 'Save',
          )); ?>
+         <?php $this->widget('bootstrap.widgets.TbButton', array(
+	   'buttonType'=>'link',
+	   'url'=>$this->createUrl('app/menu'),
+	   'type'=>'primary',
+ 	   'label'=>'Back',
+         )); ?>
       <?php $this->endWidget(); ?>
       </div>
       <?php if(!$model->isNewRecord):?>
@@ -57,14 +63,14 @@
              <tr>
                <td><?=$s->size->name?></td>
                <td><?=$s->price?></td>
-               <td><a class='btn deleteThis' data-target=<?=Yii::app()->createUrl('item_sizes/delete',array('id'=>$s->id))?>> <i class=icon-trash></i></a></td>
+               <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_sizes/delete',array('id'=>$s->id))?>> <i class=icon-trash></i></a></td>
              </tr>
              <?php endforeach;?>
            </tbody>
          </table>
         <?php $this->widget('bootstrap.widgets.TbButton', array(
 	  'buttonType'=>'link',
-          'url'=>Yii::app()->createUrl('item_sizes/create',array('iid'=>$model->id)),
+          'url'=>$this->createUrl('item_sizes/create',array('iid'=>$model->id)),
 	  'type'=>'warning',
 	  'label'=>'Add',
         )); ?>
@@ -82,14 +88,14 @@
              <?php if($a->deleted==1){continue;}?>
              <tr>
                <th><?=$a->addOn->description?></th>
-               <td><a class='btn deleteThis' data-target=<?=Yii::app()->createUrl('item_add_ons/delete',array('id'=>$a->id))?>> <i class=icon-trash></i></a></td>
+               <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_add_ons/delete',array('id'=>$a->id))?>> <i class=icon-trash></i></a></td>
              </tr>
              <?php endforeach;?>
            </tbody>
          </table>
         <?php $this->widget('bootstrap.widgets.TbButton', array(
 	  'buttonType'=>'link',
-          'url'=>Yii::app()->createUrl('item_add_ons/create',array('iid'=>$model->id)),
+          'url'=>$this->createUrl('item_add_ons/create',array('iid'=>$model->id)),
 	  'type'=>'warning',
 	  'label'=>'Add',
         )); ?>
@@ -104,17 +110,18 @@
            </thead>
            <tbody>
              <?php foreach($model->itemCheckList as $c):?>
+             <?php if($c->deleted==1){continue;}?>
              <tr>
                <td><?=$c->miscItem->name?></td>
                <td><?=$c->qty?> pcs</td>
-               <td><a class='btn deleteThis' data-target=<?=Yii::app()->createUrl('item_checklist/delete',array('id'=>$a->id))?>> <i class=icon-trash></i></a></td>
+               <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_checklist/delete',array('id'=>$c->id))?>> <i class=icon-trash></i></a></td>
              </tr>
              <?php endforeach;?>
            </tbody>
          </table>
         <?php $this->widget('bootstrap.widgets.TbButton', array(
 	  'buttonType'=>'link',
-          'url'=>Yii::app()->createUrl('item_checklist/create',array('iid'=>$model->id)),
+          'url'=>$this->createUrl('item_checklist/create',array('iid'=>$model->id)),
 	  'type'=>'warning',
 	  'label'=>'Add',
         )); ?>

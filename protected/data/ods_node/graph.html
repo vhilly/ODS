@@ -1,7 +1,7 @@
 <html>
 	<head>
 <meta charset="UTF-8">
-		<title>Push notification server streaming on a MySQL db</title>
+		<title>Sample Realtime Stats</title>
 		<style>
 			dd,dt {
 				float:left;
@@ -23,61 +23,59 @@
 	<body>
         <time></time>
     <script src="socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://localhost/assets/jquery-latest.min.js"></script>
+    <script src="http://localhost/assets/highcharts.js"></script>
+    <script src="http://localhost/assets/exporting.js"></script>
     <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <script>
-   var ts = Math.round(new Date().getTime() / 1000);
-       var tsNxtDay = ts + (24 * 3600);
+       var host='http://localhost:8000';
         var chart; 
-        var series=[];
-        var socket = io.connect('http://ryouko.imperium.jp:8000');
+        var socket = io.connect(host);
         socket.on('connect',function(){
           socket.emit('join','test');
           series=[];
         });
 
        socket.on('graph',function(data){
+        var series=[];
          var perhr={};
          var temp='';
          $.each(data.chartdata,function(k,v){
            if(v.id==0)
             return;
            if(v.id != temp){
-             var obj={name:v.name,data:{}};
+             var obj={name:v.name,data:[]};
              perhr[v.id]=obj;
            }
-           perhr[v.id].data[v.hr*1000]=v.cnt;
+           perhr[v.id].data.push([v.tstamp*1000,v.cnt]);
            temp=v.id;
          });
-           //console.log(perhr);
          $.each(perhr,function(k,v){
-           var chartdata=[];
            var name = v.name;
-           for(x=0;x<23;x++){
-             if(v.data[x]){
-               chartdata.push(v.data[x]);
-             }else{
-               chartdata.push(0);
-             }
-           }
-           series.push({ name:name,data:chartdata})
+           series.push({ name:name,data:v.data})
          });
          loadChart(series);
        });
 
       socket.on('seriesUpdate',function(data){
-        ch=chart.series[data.chart[0]-1].data[data.chart[1]];
-        ch.update(ch.y+1);
+        nch=chart.series[data.chart[0]-1].data[0];
+        nch.update(nch.y+1);
       });
+    Highcharts.setOptions({
+      global: {
+          useUTC: false
+      }
+    });
     function loadChart(series){
+      var dt=new Date();
+      var d1 =  new Date( dt.getFullYear(),dt.getMonth(),dt.getDate()).getTime();
+      var d2 =  new Date( dt.getFullYear(),dt.getMonth(),dt.getDate()+1).getTime();
       var options = {
-           global: {
-              useUTC: false
-            },
             chart: {
                renderTo: 'chart',
+            },
+            credits:{
+               enabled:false,
             },
             title: {
                 text: 'No. of Orders Per Hour',
@@ -90,8 +88,8 @@
             xAxis: {
               type:'datetime',
               tickInterval: 3600 * 1000,
-              min: ts*1000,
-              max: tsNxtDay*1000,
+              min: d1,
+              max: d2,
                 dateTimeLabelFormats : {
                  hour: '%I %p',
                 },
@@ -118,10 +116,6 @@
          };
          chart = new Highcharts.Chart(options);
     }
-
-      $('#test').click(function(){
-        chart.series[1].data[1].update(1);
-      });
     </script>
 
 

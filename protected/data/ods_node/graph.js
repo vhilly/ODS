@@ -61,10 +61,10 @@ var updatedOrders = function() {
 
 }
 var updateGraph = function(socket){
-  var query2 = connection.query('SELECT b.id id,b.name,UNIX_TIMESTAMP(DATE_FORMAT(o.date_ordered,"%Y-%m%-%d %H:0:0"))  as hr,count(o.id) cnt,IFNULL(SUM(o.total_amt ),0) amt '+
+  var query2 = connection.query('SELECT b.id id,b.name,UNIX_TIMESTAMP(DATE_FORMAT(o.date_ordered,"%Y-%m%-%d %H:0:0"))  as tstamp,count(o.id) cnt,IFNULL(SUM(o.total_amt ),0) amt '+
                                 'FROM branches b LEFT JOIN orders o '+
-                                'ON b.id = o.branch_id AND b.is_active=1 AND DATE(o.date_ordered) = CURDATE()'+
-                                'GROUP BY b.id,hr'),
+                                'ON b.id = o.branch_id AND b.is_active=1 AND o.date_ordered > CURDATE()-2 '+
+                                'GROUP BY b.id,tstamp'),
     chartdata = []; // this array will contain the result of our db query
 
   query2
@@ -75,7 +75,10 @@ var updateGraph = function(socket){
       chartdata.push(data);
     })
     .on('end', function() {
-      socket.emit('graph',{chartdata:chartdata});
+      if(socket)
+        socket.emit('graph',{chartdata:chartdata});
+      else
+        updateSockets('graph',{chartdata:chartdata});
     });
 
 };
@@ -93,7 +96,8 @@ io.sockets.on('connection', function(socket) {
     updatedOrders();
   });
   socket.on('updateSeries',function(data){
-     updateSockets('seriesUpdate',{chart:data});
+     //updateSockets('seriesUpdate',{chart:data});
+     updateGraph();
   });
 });
 var updateSockets = function(name,data){

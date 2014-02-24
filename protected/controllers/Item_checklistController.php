@@ -25,10 +25,10 @@ $this->render('view',array(
 public function actionCreate($iid){
 $model=new ItemChecklist;
 $misc=MiscItems::model()->findAll();
+$model->item_id=$iid;
 if(isset($_POST['ItemChecklist']))
 {
 $model->attributes=$_POST['ItemChecklist'];
-$model->item_id=$iid;
 if($model->save())
 $this->redirect(array('menu_items/update','id'=>$iid));
 }
@@ -70,11 +70,8 @@ public function actionDelete($id)
 if(Yii::app()->request->isPostRequest)
 {
 // we only allow deletion via POST request
-$this->loadModel($id)->delete();
+ ItemChecklist::model()->updateAll(array( 'deleted'=>1), "id= {$id}" );
 
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-if(!isset($_GET['ajax']))
-$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 }
 else
 throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

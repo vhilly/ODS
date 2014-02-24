@@ -33,7 +33,7 @@ table {background-color:#794716;color:white;font-weight:bold;}
     <script>
         var chart; 
         var series=[];
-        var socket = io.connect('http://ryouko.imperium.jp:8000');
+        var socket = io.connect('http://172.31.1.112:8000');
         socket.on('connect',function(){
           socket.emit('join','test');
         });

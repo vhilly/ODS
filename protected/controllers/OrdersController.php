@@ -39,6 +39,13 @@ return array(
   }
 
   public function actionIndex(){
+    $this->render('index');
+  }
+  public function actionIncoming(){
+    $incoming=Orders::model()->findAllByAttributes(array('branch_id'=>Yii::app()->getModule('user')->user()->profile->branch,'status'=>0,'is_advance'=>0));
+    $this->renderPartial('incoming',compact('incoming'));
+  }
+  public function actionAccepted(){
     $branch= Yii::app()->getModule('user')->user()->profile->branch;
     $orders=Orders::model()->findAllByAttributes(array('branch_id'=>$branch),array('condition'=>'status NOT IN (-2,4)'));
     $orderList=array();
@@ -54,18 +61,14 @@ return array(
     $advance=isset($orderList['adv'])?$orderList['adv']:array();
     $driverOut=isset($orderList[2])?$orderList[2]:array();
     $cancel=isset($orderList[-1])?$orderList[-1]:array();
-    $this->render('index',compact('advance','driverOut','cancel','accepted'));
-  }
-  public function actionIncoming(){
-    $incoming=Orders::model()->findAllByAttributes(array('branch_id'=>Yii::app()->getModule('user')->user()->profile->branch,'status'=>0,'is_advance'=>0));
-    $this->renderPartial('incoming',compact('incoming'));
+    $this->renderPartial('accepted',compact('advance','driverOut','cancel','accepted'));
   }
   public function actionHistory($cid){
     //$cust=Customers::model()->with('orders.orderItems')->findByAttributes(array('phone_1'=>$cid)));
     $cust=Customers::model()->findByAttributes(array('phone_1'=>$cid));
     if($cust){
       $freq=Orders::model()->frequentFoodOrder($cust->id);
-      $orders=Orders::model()->with('orderItems')->findAllByAttributes(array('customer_id'=>$cust->id,'status'=>4),array('limit'=>5,'order'=>'id DESC'));
+      $orders=Orders::model()->with('orderItems')->findAllByAttributes(array('customer_id'=>$cust->id),array('condition'=>'status > -1','limit'=>5,'order'=>'id DESC'));
     }
     $this->renderPartial('history',compact('cust','orders','freq'));
   }

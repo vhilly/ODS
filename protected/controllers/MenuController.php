@@ -44,9 +44,8 @@ $model=new Menu;
 if(isset($_POST['Menu']))
 {
 $model->attributes=$_POST['Menu'];
-$model->img = CUploadedFile::getInstance($this, 'img');
 if($model->save())
-$this->redirect(array('index'));
+$this->redirect(array('app/menu'));
 }
 
 $this->render('create',array(

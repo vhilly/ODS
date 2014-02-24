@@ -4,21 +4,17 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
-
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-    <script type="text/javascript" src="http://ryouko.imperium.jp:8000/socket.io/socket.io.js"></script>`
+    <script type="text/javascript" src="http://<?=$_SERVER['SERVER_ADDR']?>:8000/socket.io/socket.io.js"></script>`
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css" />
 	<style>
 		* {
 			font-size:12px;
 		}
 	</style>
-    <?php Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl.'/js/scripts.js');?>
 </head>
 
 <body>
-<?php 
-?>
 <?php
    $branch_id= Yii::app()->getModule('user')->user()->profile->branch;
    $hidden= $branch_id==0?'hidden':'';
@@ -56,13 +52,13 @@
                 array('icon'=>'icon-user icon-2x','label'=>'('.Yii::app()->user->name.')', 'url'=>'#', 'items'=>array(
                     array('icon'=>'cog','label'=>'SETTINGS'),
                     '---',
-                    array('','label'=>'Profile', 'url'=>array('/user/profile')), 
+                    array('','label'=>'Store Setup', 'url'=>array('/app/store'),'visible'=>$branch_id!=0), 
                     array('icon'=>'off','label'=>'Logout', 'url'=>array('/site/logout')), 
                 ),'visible'=>!Yii::app()->user->isGuest ),
             ),
         ),
         '<div class="btn-group pull-right '.$hidden.'">
-	  <button class="btn btn-primary modal-content" type="button" data-toggle=modal data-target=#myModal data-title="Add Rider"  data-content="'.Yii::app()->createUrl('riders/create').'">
+	  <button class="btn btn-primary modal-content" type="button" data-toggle=modal data-target=#contentModal data-title="Add Rider"  data-content="'.Yii::app()->createUrl('riders/create').'">
             <span class="icon-rocket">Add Rider</span>
            </button> 
          </div>',
@@ -71,11 +67,26 @@
 <div class="fluid" id="page">
   <div class="container-fluid content">
     <?php echo $content?>
+    <div id='progressBar' style='display:none;position:fixed;' class='modal-backdrop'>
+    <?php 
+    $this->widget(
+    'bootstrap.widgets.TbProgress',
+    array(
+      'type' => 'danger', // 'info', 'success' or 'danger'
+      'percent' => 100, // the progress
+      'striped' => true,
+      'content'=>'<b>processing.. please wait</b>',
+      'htmlOptions' => array('style'=>'position:fixed;top: 50%;left:50%;width:580px;margin-left:-240px'),
+      'animated' => true,
+      )
+    );
+    ?>
+    </div>
   </div>
 </div><!-- page -->
 <?php $this->beginWidget(
 'bootstrap.widgets.TbModal',
-array('id' => 'myModal')
+array('id' => 'contentModal')
 ); ?>
  
 <div class="modal-header">
@@ -93,3 +104,4 @@ array('id' => 'myModal')
 <?php $this->endWidget(); ?>
 </body>
 </html>
+<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl.'/js/scripts.js', CClientScript::POS_END);?>

@@ -1,6 +1,8 @@
-var app = require('http').createServer(handler),
+var
   io = require('socket.io').listen(app),
   fs = require('fs'),
+  http=require('http');
+  express = require('express'),
   mysql = require('mysql'),
   connectionsArray = [],
   connection = mysql.createConnection({
@@ -11,13 +13,21 @@ var app = require('http').createServer(handler),
     port: 3306
   });
 
+var app=express();
+var server= http.createServer(app).listen(8081,function(){
+    console.log('listening on http:/localhost:8080');
+});
+app.configure(function(){
+   app.use('/assets',express.static(__dirname+'/assets'));
+});
+app.use(express.errorHandler());
+
 connection.connect(function(err) {
   console.log(err);
 });
 
-app.listen(8000);
 
-function handler(req, res) {
+app.get('/',function(req, res) {
   fs.readFile(__dirname + '/client.html', function(err, data) {
     if (err) {
       console.log(err);
@@ -27,7 +37,7 @@ function handler(req, res) {
     res.writeHead(200);
     res.end(data);
   });
-}
+});
 
 
 var updatedOrders = function() {

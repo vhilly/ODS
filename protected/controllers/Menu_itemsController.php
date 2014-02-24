@@ -73,63 +73,11 @@ $this->redirect(array('update','id'=>$model->id));
       $this->render('update',compact('model','menu'));
 }
 
-/**
-* Deletes a particular model.
-* If deletion is successful, the browser will be redirected to the 'admin' page.
-* @param integer $id the ID of the model to be deleted
-*/
-public function actionDelete($id)
-{
-if(Yii::app()->request->isPostRequest)
-{
-// we only allow deletion via POST request
-$this->loadModel($id)->delete();
-
-// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-if(!isset($_GET['ajax']))
-$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-}
-else
-throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-}
-
-/**
-* Lists all models.
-*/
-public function actionIndex()
-{
-$dataProvider=new CActiveDataProvider('MenuItems');
-$this->render('index',array(
-'dataProvider'=>$dataProvider,
-));
-}
-
-/**
-* Manages all models.
-*/
-public function actionAdmin()
-{
-$model=new MenuItems('search');
-$model->unsetAttributes();  // clear any default values
-if(isset($_GET['MenuItems']))
-$model->attributes=$_GET['MenuItems'];
-
-$this->render('admin',array(
-'model'=>$model,
-));
-}
   
-  public function actionGetAll($menu_id,$bid){
+  public function actionIndex($menu_id,$bid){
     $menuItems=MenuItems::model()->findAllByAttributes(array('deleted'=>0,'is_available'=>1,'menu_id'=>$menu_id),
       array('condition'=>"id NOT IN (SELECT item_id FROM unavailable_items WHERE branch_id=$bid)"));
-    $row='';
-    foreach($menuItems as $m){
-      $row .= '<li><button class="btn span3 itemSelect btn-large" data-prod_id="'.$m->id.'" data-prod_name="'.$m->description.'">
-              <strong>'.$m->description.'</strong>
-            </button></li>';
-    }
-    echo "<ul class=box-span>$row</ul>";
-    Yii::app()->end();
+    $this->renderPartial('index',array('menuItems'=>$menuItems));
   }
 
 

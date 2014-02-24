@@ -42,7 +42,10 @@
     }
     public function actionOrder_taker(){
       $menu=Menu::model()->findAllByAttributes(array('deleted'=>0,'is_available'=>1));
-      $branches=Branches::model()->findAllByAttributes(array('is_active'=>1));
+      $branches=Yii::app()->db->createCommand()
+        ->select('b.id as id,b.name as name')
+        ->from('branches as b,store_hours as sh')
+        ->where('sh.day_of_week=WEEKDAY(NOW()) AND TIME(NOW()) BETWEEN sh.open_time AND sh.close_time AND sh.branch_id=b.id AND b.is_active=1')->queryAll();
       $this->render('order_taker',compact('menu','branches'));
     }
     public function actionOrder_details($iid){
@@ -204,13 +207,45 @@
       $this->renderPartial('map');
     }
     public function actionMarkers($lat,$lng,$radius){
-      $sql = "SELECT id as branch_id,address, name, lat, lng, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance FROM branches HAVING distance < :radius ORDER BY distance LIMIT 0 , 20";
+      $sql = "SELECT b.id as branch_id,b.address as address, b.name as name, b.lat as lat, b.lng as lng, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance FROM branches as b,store_hours as sh WHERE sh.day_of_week=WEEKDAY(NOW()) AND TIME(NOW()) BETWEEN sh.open_time AND sh.close_time AND sh.branch_id=b.id AND b.is_active=1 HAVING distance < :radius ORDER BY distance LIMIT 0 , 20";
       $command=Yii::app()->db->createCommand($sql);
       $command->bindParam(":lat",$lat,PDO::PARAM_STR);
       $command->bindParam(":lng",$lng,PDO::PARAM_STR);
       $command->bindParam(":radius",$radius,PDO::PARAM_STR);
       $result = $command->queryAll();
       $this->renderPartial('markers',compact('result'));
+    }
+
+    public function actionStore(){
+      $branch_id= Yii::app()->getModule('user')->user()->profile->branch;
+      $store=Branches::model()->findByPk($branch_id);
+      $store_hours=StoreHours::model()->findAllByAttributes(array('branch_id'=>$branch_id));
+      $shrs=array();
+      foreach($store_hours as $v){
+        $shrs[$v->day_of_week]=$v;
+      }
+      if(isset($_POST['Branches'])){
+        $store->attributes=$_POST['Branches'];
+        $store->save();
+      if(isset($_POST['store_hours'])){
+        foreach($_POST['store_hours'] as $k=>$v){
+          if(array_key_exists($k,$shrs)){
+            $shrs[$k]->open_time=$v[0];
+            $shrs[$k]->close_time=$v[1];
+            $shrs[$k]->save();
+          }else{
+            $sh=new StoreHours;
+            $sh->open_time=$v[0];
+            $sh->close_time=$v[1];
+            $sh->day_of_week=$k;
+            $sh->branch_id=$branch_id;
+            $sh->save();
+          }
+        }
+      }
+        $this->redirect(array('app/store'));
+      }
+      $this->render('store',compact('store','shrs'));
     }
   }
 

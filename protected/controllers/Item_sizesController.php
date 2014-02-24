@@ -63,14 +63,11 @@ public function actionCreate($iid)
 {
 $model=new ItemSizes;
 $sizes=Sizes::model()->findAll();
-
-// Uncomment the following line if AJAX validation is needed
-// $this->performAjaxValidation($model);
+$model->item_id=$iid;
 
 if(isset($_POST['ItemSizes']))
 {
 $model->attributes=$_POST['ItemSizes'];
-$model->item_id=$iid;
 if($model->save())
 $this->redirect(array('menu_items/update','id'=>$model->item_id));
 }

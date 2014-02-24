@@ -44,12 +44,6 @@
 <?php $opts = count($opts) ? '+' . implode('+', $opts) : ''; ?>
 <?php $optFields = count($optFields) ? implode(',', $optFields) : ''; ?>
 <script>
-      function isNumberKey(evt) {
-      var charCode = (evt.which) ? evt.which : event.keyCode
-        if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-        return true;
-      }
     function updateFields(target, id, price){
     $(target + '_id').val(id);
       $(target + '_price').val(price);
@@ -63,7 +57,7 @@
       var qty = $('#qtyHolder').val();
       var iid = $('#iid').val();
       var opts = {<?= $optFields ?>};
-      $.post("<?= Yii::app()->createUrl('app/order_query') ?>",
+      $.post("<?= $this->createUrl('order_query') ?>",
       { item:{iid:iid, qty:qty, totalPrice:$('#totalPrice').val()}, opts:opts}).done(function(data) {
        updateOrderList();
        $('#orderModal').modal('hide');

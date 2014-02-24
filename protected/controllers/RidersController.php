@@ -53,7 +53,7 @@ if(Yii::app()->getRequest()->getIsAjaxRequest()) {
 
 $this->renderPartial('create',array(
 'model'=>$model,
-),false,true);
+));
 }
 
 /**

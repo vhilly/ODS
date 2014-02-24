@@ -18,7 +18,7 @@
               <?php $st+=$o->total_price;?>
               <?php $totalDiscount+=$o->discount;?>
               <tr>
-                <td><a class='btn deleteOrder' data-order_id=<?=$o->id?>><i class=icon-remove></i></a> <?=$o->item->description?></td>
+                <td><a class='btn deleteOrder' data-target='<?=$this->createUrl('order_delete&id=')?>' data-order_id=<?=$o->id?>><i class=icon-remove></i></a> <?=$o->item->description?></td>
                 <td>
                   <a href="#" rel="OrderTemp_discount_code" data-target="#<?=$o->id?>"  data-pk="<?=$o->id?>"></a>
                 </td>
