@@ -1,13 +1,11 @@
 <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
-	'id'=>'sizes-form',
+	'id'=>'add-ons-form',
 	'enableAjaxValidation'=>false,
 )); ?>
 
 <p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 <?php echo $form->errorSummary($model); ?>
-
-	<?php echo $form->dropDownListRow($model,'type',array('item'=>'item','add_on'=>'add on'),array('class'=>'span3')); ?>
 
 	<?php echo $form->textFieldRow($model,'name',array('class'=>'span3','maxlength'=>100)); ?>
 
@@ -22,7 +20,7 @@
                         'type'=>'danger',
                         'buttonType'=>'link',
                         'icon'=>'',
-                        'url'=>Yii::app()->createUrl('sizes/admin'),'label'=>'Cancel'
+                        'url'=>Yii::app()->createUrl('addOns/admin'),'label'=>'Cancel'
 		)); ?>
 
 <?php $this->endWidget(); ?>

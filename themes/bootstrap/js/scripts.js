@@ -35,9 +35,9 @@ $(document).ready(function() {
     return false;
   });
   $(document).on('click','.selectRider',function(){
+    $('#contentModal .modal-body').load($(this).data('content')+$(this).data('order_id'));
     $('#contentModal .modal-header h4').html('Select Rider');
     $('#contentModal .modal-footer').html('');
-    $('#contentModal .modal-body').load($(this).data('content')+$(this).data('order_id'));
     $('#contentModal').modal();
     return false;
   });
@@ -232,6 +232,7 @@ $(document).ready(function() {
       $.ajax({
         url:$(this).data('target')+$(this).data('order_id'),
         success:function(data){
+          $('#contentModal').modal('hide');
         },
         error:function(){
          alert(this.url);
@@ -240,7 +241,7 @@ $(document).ready(function() {
   });
 
 });
-  var socket = io.connect('http://172.31.1.112:8000');
+  var socket = io.connect('http://ryouko.imperium.jp:8000');
 
   var flag=1;
   $( document ).ajaxStart(function(){

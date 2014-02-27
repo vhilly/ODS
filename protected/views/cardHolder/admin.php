@@ -1,49 +1,10 @@
-<?php
-$this->breadcrumbs=array(
-	'Card Holders'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-array('label'=>'List CardHolder','url'=>array('index')),
-array('label'=>'Create CardHolder','url'=>array('create')),
-);
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-$('.search-form').toggle();
-return false;
-});
-$('.search-form form').submit(function(){
-$.fn.yiiGridView.update('card-holder-grid', {
-data: $(this).serialize()
-});
-return false;
-});
-");
-?>
-
-<h1>Manage Card Holders</h1>
-
-<p>
-	You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>
-		&lt;&gt;</b>
-	or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button btn')); ?>
-<div class="search-form" style="display:none">
-	<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+<h1>Card Holders</h1>
 
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 'id'=>'card-holder-grid',
 'dataProvider'=>$model->search(),
 'filter'=>$model,
 'columns'=>array(
-		'id',
 		'first_name',
 		'last_name',
 		'middle_name',
@@ -61,14 +22,18 @@ return false;
 		'occupation',
 		'company',
 		'company_school_address',
+		*/
 		'card_no',
 		'date_created',
 		'start_date',
 		'expiration_date',
-		'card_type',
-		*/
+//		'card_type',
+		
 array(
 'class'=>'bootstrap.widgets.TbButtonColumn',
+'viewButtonUrl'=>null,
 ),
 ),
 )); ?>
+<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'','buttonType'=>'link','icon'=>'icon-plus-sign','url'=>Yii::app()->createUrl('cardHolder/create'),'label'=>'Add Card Holder'));
+

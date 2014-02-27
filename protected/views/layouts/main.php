@@ -47,6 +47,10 @@
                     array('icon'=>'cog','label'=>'SETTINGS'),
                     '---',
                     array('','label'=>'Store Setup', 'url'=>array('/app/store'),'visible'=>$branch_id!=0), 
+                    array('','label'=>'Add Ons', 'url'=>array('/addOns/admin'),'visible'=>$branch_id==0), 
+                    array('','label'=>'Sizes', 'url'=>array('/sizes/admin'),'visible'=>$branch_id==0), 
+                    array('','label'=>'Checklists', 'url'=>array('/miscItems/admin'),'visible'=>$branch_id==0), 
+                    array('','label'=>'Card Holders', 'url'=>array('/cardHolder/admin'),'visible'=>$branch_id==0), 
                     array('icon'=>'off','label'=>'Logout', 'url'=>array('/site/logout')), 
                 ),'visible'=>!Yii::app()->user->isGuest ),
             ),
@@ -60,7 +64,28 @@
 )); ?>
 <div class="fluid" id="page">
   <div class="container-fluid content">
-    <?php echo $content?>
+    <center>
+
+<?php
+  $msgType='';
+  if(Yii::app()->user->hasFlash("success"))
+   $msgType='success';
+  if(Yii::app()->user->hasFlash("error"))
+   $msgType='error';
+  if(Yii::app()->user->hasFlash("info"))
+   $msgType='info';
+  $this->widget('bootstrap.widgets.TbAlert', array(
+    'block'=>true, // display a larger alert block?
+    'fade'=>true, // use transitions?
+    'closeText'=>'x', // close link text - if set to false, no close link is displayed
+    'alerts'=>array( // configurations per alert type
+            $msgType=>array('block'=>true, 'fade'=>true, 'closeText'=>'x'), // success, info, warning, error or danger
+    ),
+  ));
+?>
+  </center>
+ 
+   <?php echo $content?>
     <div id='progressBar' style='display:none;position:fixed;' class='modal-backdrop'>
     <?php 
     $this->widget(

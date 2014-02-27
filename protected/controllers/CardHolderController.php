@@ -6,7 +6,7 @@ class CardHolderController extends Controller
 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 * using two-column layout. See 'protected/views/layouts/column2.php'.
 */
-public $layout='//layouts/column2';
+public $layout='//layouts/main';
 
 /**
 * @return array action filters
@@ -22,7 +22,7 @@ return array(
 * Specifies the access control rules.
 * This method is used by the 'accessControl' filter.
 * @return array access control rules
-*/
+/
 public function accessRules()
 {
 return array(
@@ -69,8 +69,10 @@ $model=new CardHolder;
 if(isset($_POST['CardHolder']))
 {
 $model->attributes=$_POST['CardHolder'];
-if($model->save())
-$this->redirect(array('view','id'=>$model->id));
+if($model->save()){
+Yii::app()->user->setFlash('success', 'CardHolder has been added!');
+$this->redirect(array('admin'));
+}
 }
 
 $this->render('create',array(
@@ -93,8 +95,10 @@ $model=$this->loadModel($id);
 if(isset($_POST['CardHolder']))
 {
 $model->attributes=$_POST['CardHolder'];
-if($model->save())
-$this->redirect(array('view','id'=>$model->id));
+if($model->save()){
+Yii::app()->user->setFlash('success', 'CardHolder has been updated!');
+$this->redirect(array('admin'));
+}
 }
 
 $this->render('update',array(

@@ -23,12 +23,12 @@
 	<body>
         <time></time>
     <script src="socket.io/socket.io.js"></script>
-    <script src="http://localhost/assets/jquery-latest.min.js"></script>
-    <script src="http://localhost/assets/highcharts.js"></script>
-    <script src="http://localhost/assets/exporting.js"></script>
+    <script src="http://ryouko.imperium.jp/assets/jquery-latest.min.js"></script>
+    <script src="http://ryouko.imperium.jp/assets/highcharts.js"></script>
+    <script src="http://ryouko.imperium.jp/assets/exporting.js"></script>
     <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     <script>
-       var host='http://localhost:8000';
+       var host='http://ryouko.imperium.jp:8000';
         var chart; 
         var socket = io.connect(host);
         socket.on('connect',function(){

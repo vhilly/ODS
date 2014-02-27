@@ -1,6 +1,6 @@
 <?php
 
-class SizesController extends Controller
+class AddOnsController extends Controller
 {
 /**
 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -14,7 +14,7 @@ public $layout='//layouts/main';
 public function filters()
 {
 return array(
-  'rights'
+//'accessControl', // perform access control for CRUD operations
 );
 }
 
@@ -43,7 +43,7 @@ array('deny',  // deny all users
 ),
 );
 }
-
+*/
 /**
 * Displays a particular model.
 * @param integer $id the ID of the model to be displayed
@@ -61,19 +61,20 @@ $this->render('view',array(
 */
 public function actionCreate()
 {
-$model=new Sizes;
+$model=new AddOns;
 
 // Uncomment the following line if AJAX validation is needed
 // $this->performAjaxValidation($model);
 
-if(isset($_POST['Sizes']))
+if(isset($_POST['AddOns']))
 {
-$model->attributes=$_POST['Sizes'];
+$model->attributes=$_POST['AddOns'];
 if($model->save()){
-Yii::app()->user->setFlash('success', 'Size has been added!');
+Yii::app()->user->setFlash('success', 'Add On has been added!');
 $this->redirect(array('admin'));
 }
 }
+
 $this->render('create',array(
 'model'=>$model,
 ));
@@ -91,13 +92,14 @@ $model=$this->loadModel($id);
 // Uncomment the following line if AJAX validation is needed
 // $this->performAjaxValidation($model);
 
-if(isset($_POST['Sizes']))
+if(isset($_POST['AddOns']))
 {
-$model->attributes=$_POST['Sizes'];
+$model->attributes=$_POST['AddOns'];
 if($model->save()){
-Yii::app()->user->setFlash('success', 'Size has been updated!');
+Yii::app()->user->setFlash('success', 'Add On has been updated!');
 $this->redirect(array('admin'));
 }
+
 }
 
 $this->render('update',array(
@@ -130,7 +132,7 @@ throw new CHttpException(400,'Invalid request. Please do not repeat this request
 */
 public function actionIndex()
 {
-$dataProvider=new CActiveDataProvider('Sizes');
+$dataProvider=new CActiveDataProvider('AddOns');
 $this->render('index',array(
 'dataProvider'=>$dataProvider,
 ));
@@ -141,10 +143,10 @@ $this->render('index',array(
 */
 public function actionAdmin()
 {
-$model=new Sizes('search');
+$model=new AddOns('search');
 $model->unsetAttributes();  // clear any default values
-if(isset($_GET['Sizes']))
-$model->attributes=$_GET['Sizes'];
+if(isset($_GET['AddOns']))
+$model->attributes=$_GET['AddOns'];
 
 $this->render('admin',array(
 'model'=>$model,
@@ -158,7 +160,7 @@ $this->render('admin',array(
 */
 public function loadModel($id)
 {
-$model=Sizes::model()->findByPk($id);
+$model=AddOns::model()->findByPk($id);
 if($model===null)
 throw new CHttpException(404,'The requested page does not exist.');
 return $model;
@@ -170,7 +172,7 @@ return $model;
 */
 protected function performAjaxValidation($model)
 {
-if(isset($_POST['ajax']) && $_POST['ajax']==='sizes-form')
+if(isset($_POST['ajax']) && $_POST['ajax']==='add-ons-form')
 {
 echo CActiveForm::validate($model);
 Yii::app()->end();

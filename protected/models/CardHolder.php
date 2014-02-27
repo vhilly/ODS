@@ -49,8 +49,8 @@ class CardHolder extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, middle_name, birth_date, phone, mobile, address, zip_code, company_school_address, card_no, date_created, card_type', 'required'),
-			array('gender, civil_status, is_student, is_employed, card_type', 'numerical', 'integerOnly'=>true),
+			array('first_name, last_name, middle_name, birth_date, gender, card_no, card_type', 'required'),
+			array('civil_status, is_student, is_employed, card_type', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, middle_name, email, card_no', 'length', 'max'=>100),
 			array('phone, mobile, occupation, company', 'length', 'max'=>50),
 			array('address, company_school_address', 'length', 'max'=>255),

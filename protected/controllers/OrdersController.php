@@ -65,7 +65,7 @@ return array(
   }
   public function actionFollow_up($id){
     $model=$this->loadModel($id);
-    $model->remarks .= ' - Customer followed up on this';
+    $model->remarks .= ' - Customer follow-up';
     $model->save();
   }
   public function actionHistory($cid){
