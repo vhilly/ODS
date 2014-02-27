@@ -39,7 +39,7 @@
          <?php $this->widget('bootstrap.widgets.TbButton', array(
 	   'buttonType'=>'submit',
 	   'type'=>'primary',
- 	   'label'=>$model->isNewRecord ? 'Create' : 'Save',
+ 	   'label'=>'Save',
          )); ?>
          <?php $this->widget('bootstrap.widgets.TbButton', array(
 	   'buttonType'=>'link',
@@ -126,6 +126,7 @@
                <td><?=$c->qty?> pcs</td>
                <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_checklist/delete',array('id'=>$c->id))?>> <i class=icon-trash></i></a></td>
              </tr>
+             <?php endforeach;?>
              <tr>
                <td>
                <?php $this->widget('bootstrap.widgets.TbButton', array(
@@ -136,7 +137,6 @@
                )); ?>
                </td>
              </tr>
-             <?php endforeach;?>
            </tbody>
          </table>
       </div>

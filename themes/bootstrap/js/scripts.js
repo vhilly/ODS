@@ -13,7 +13,7 @@ $(document).ready(function() {
     if(url){
         $(target).find(".modal-body").load(url);
         $(target).find(".modal-header h4").html($(this).data('title'));
-        $(target).find(".modal-footer").html('<button id="btnSave" onclick="$(\'#ajaxSubmit\').click();" class="btn btn-primary">Save</button>'+
+        $(target).find(".modal-footer").html('<button id="btnSave" class="btn btn-primary">Save</button>'+
        '<button data-dismiss="modal" id="modalClose" class="btn" name="yt0" type="button">Close</button>');
     }
   });

@@ -3,7 +3,6 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 <?php echo $form->errorSummary($model); ?>
 
@@ -13,7 +12,13 @@
 	<?php $this->widget('bootstrap.widgets.TbButton', array(
 			'buttonType'=>'submit',
 			'type'=>'primary',
-			'label'=>$model->isNewRecord ? 'Create' : 'Save',
+			'label'=>'Save',
 		)); ?>
+         <?php $this->widget('bootstrap.widgets.TbButton', array(
+	   'buttonType'=>'link',
+	   'url'=>$this->createUrl('app/menu'),
+	   'type'=>'primary',
+ 	   'label'=>'Back',
+         )); ?>
 
 <?php $this->endWidget(); ?>

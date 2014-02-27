@@ -21,7 +21,7 @@
     <?php $this->widget(
      'bootstrap.widgets.TbButton',
      array(
-       'label' => 'Add Menu',
+       'label' => 'Add Category',
        'buttonType' => 'link',
        'url' => Yii::app()->createUrl('menu/create'),
      )
@@ -30,7 +30,7 @@
     <?php $this->widget(
      'bootstrap.widgets.TbButton',
      array(
-       'label' => 'Add Menu Item',
+       'label' => 'Add Item',
        'buttonType' => 'link',
        'url' => Yii::app()->createUrl('menu_items/create'),
      )

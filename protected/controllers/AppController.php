@@ -78,7 +78,8 @@
       $order->remarks=$_POST['order']['remarks'];
       $order->special_instruction=$_POST['order']['si'];
       $order->bill_change=$_POST['order']['bchange'];
-      $order->card_no=$_POST['order']['card_no'];
+      if(!empty($_POST['order']['card_no']))
+        $order->card_no=$_POST['order']['card_no'];
       $order->agent=Yii::app()->user->id;
       $customer='';
       if($_POST['customer']['id'])
@@ -125,6 +126,7 @@
           $order->tax=$VAT;
           $order->total_amt=$grandTotal;
           $order->save();
+          OrderTempItemAddOns::model()->deleteAllByAttributes(array('client_id'=>$cid));
           OrderTemp::model()->deleteAllByAttributes(array('client_id'=>$cid));
           echo 'Success';
         }else{
@@ -149,7 +151,7 @@
       $tax='12';
       $charges='10';
       $cid=str_replace('.','',CHttpRequest::getUserHostAddress()).Yii::app()->user->id;
-      $orders=OrderTemp::model()->findAllByAttributes(array('client_id'=>$cid));
+      $orders=OrderTemp::model()->with('addOns')->findAllByAttributes(array('client_id'=>$cid));
       $this->renderPartial('order_list',compact('orders','tax','charges'));
     }
     public function actionOrder_query(){
@@ -170,6 +172,17 @@
          $model->total_price=$model->orig_price-$model->discount;
          $model->opts=$opts;
          $model->save(false);
+         if($model->opts){
+           foreach(json_decode($model->opts) as $op){
+             if($op){
+               $ao=new OrderTempItemAddOns;
+               $ao->order_item_id=$model->id;
+               $ao->client_id=$cid;
+               $ao->add_on=$op;
+               $ao->save();
+             }
+           }
+         }
       }
       
     }

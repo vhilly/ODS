@@ -1,27 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "order_temp".
+ * This is the model class for table "order_item_add_ons".
  *
- * The followings are the available columns in table 'order_temp':
+ * The followings are the available columns in table 'order_item_add_ons':
  * @property integer $id
- * @property string $client_id
- * @property integer $item_id
- * @property integer $qty
- * @property string $total_price
- * @property string $opts
+ * @property integer $order_item_id
+ * @property integer $add_on
  *
  * The followings are the available model relations:
- * @property MenuItems $item
+ * @property AddOnSizes $addOn
+ * @property OrderItems $orderItem
  */
-class OrderTemp extends CActiveRecord
+class OrderTempItemAddOns extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'order_temp';
+		return 'order_temp_item_add_ons';
 	}
 
 	/**
@@ -32,15 +30,11 @@ class OrderTemp extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('client_id, item_id, qty, total_price, opts', 'required'),
-			array('item_id, qty,size', 'numerical', 'integerOnly'=>true),
-			array('client_id', 'length', 'max'=>255),
-			array('total_price,orig_price,discount', 'length', 'max'=>20),
-			array('discount_code', 'length', 'max'=>10),
-			array('opts', 'length', 'max'=>100),
+			array('order_item_id, add_on', 'required'),
+			array('order_item_id, add_on', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, client_id, item_id, qty, total_price, opts', 'safe', 'on'=>'search'),
+			array('id, order_item_id, add_on', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,9 +46,8 @@ class OrderTemp extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'item' => array(self::BELONGS_TO, 'MenuItems', 'item_id'),
-			'addOns' => array(self::HAS_MANY, 'OrderTempItemAddOns', 'order_item_id'),
-			'size0' => array(self::BELONGS_TO, 'Sizes', 'size'),
+			'addOn' => array(self::BELONGS_TO, 'AddOnSizes', 'add_on'),
+			'orderItem' => array(self::BELONGS_TO, 'OrderTemp', 'order_item_id'),
 		);
 	}
 
@@ -65,11 +58,8 @@ class OrderTemp extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'client_id' => 'Client',
-			'item_id' => 'Item',
-			'qty' => 'Qty',
-			'total_price' => 'Total Price',
-			'opts' => 'Opts',
+			'order_item_id' => 'Order Item',
+			'add_on' => 'Add On',
 		);
 	}
 
@@ -92,11 +82,8 @@ class OrderTemp extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('client_id',$this->client_id,true);
-		$criteria->compare('item_id',$this->item_id);
-		$criteria->compare('qty',$this->qty);
-		$criteria->compare('total_price',$this->total_price,true);
-		$criteria->compare('opts',$this->opts,true);
+		$criteria->compare('order_item_id',$this->order_item_id);
+		$criteria->compare('add_on',$this->add_on);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -107,11 +94,10 @@ class OrderTemp extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return OrderTemp the static model class
+	 * @return OrderItemAddOns the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-        
 }

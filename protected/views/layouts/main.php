@@ -57,7 +57,7 @@
         ),
         '<div class="btn-group pull-right '.$hidden.'">
 	  <button class="btn btn-primary modal-content" type="button" data-toggle=modal data-target=#contentModal data-title="Add Rider"  data-content="'.Yii::app()->createUrl('riders/create').'">
-            <span class="icon-rocket">Add Rider</span>
+            <span class="icon-plus">Add Rider</span>
            </button> 
          </div>',
     ),
