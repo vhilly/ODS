@@ -18,7 +18,6 @@
     <input type=hidden id=item_size_id name=item_size value=<?= isset($sizes[0]) ? $sizes[0]['id'] : 0 ?>>
     <input type=hidden id=item_size_price value=<?= isset($sizes[0]) ? $sizes[0]['price'] : 0 ?>>
     <?php $opts[] = "parseFloat($('#item_size_price').val())"; ?>
-    <?php $optFields[] = "item_size_id:$('#item_size_id').val()"; ?>
   <?php endif; ?>
 
 <?php if (count($addons)): ?>
@@ -56,9 +55,10 @@
       updatePrice();
       var qty = $('#qtyHolder').val();
       var iid = $('#iid').val();
+      var size= $('#item_size_id').val();
       var opts = {<?= $optFields ?>};
       $.post("<?= $this->createUrl('order_query') ?>",
-      { item:{iid:iid, qty:qty, totalPrice:$('#totalPrice').val()}, opts:opts}).done(function(data) {
+      { item:{iid:iid, qty:qty, totalPrice:$('#totalPrice').val(),size:size}, opts:opts}).done(function(data) {
        updateOrderList();
        $('#orderModal').modal('hide');
       }).fail(function(){

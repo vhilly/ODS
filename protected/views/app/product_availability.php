@@ -1,9 +1,9 @@
 <div class="row-fluid">
-  <div class="span7">
+  <div class="span7 well">
     <table class='table table-order table-bordered'>
       <tbody>
       <?php foreach($menu as $m):?>
-        <tr class='overall-header'><td><center><?=$m->description?></center></td><td colspan=2>Available?</td></tr>
+        <tr class='item-header'><td><center><?=$m->description?></center></td><td colspan=2>Available?</td></tr>
 
         <?php if(array_key_exists($m->id,$menuItemList)):?>
           <?php foreach($menuItemList[$m->id] as $ml):?>

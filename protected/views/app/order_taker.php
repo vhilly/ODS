@@ -5,7 +5,7 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="row-fluid">
-      <div class="span7">
+      <div class="span7 well">
         <table class="table table-order  table-condensed">
           <tbody>
             <tr class=overall-header>
@@ -14,7 +14,7 @@
             <tr>
                <td colspan=4>
                  <center>
-                 <?=CHtml::dropDownList('branch','',CHtml::listData($branches,'id','name'),array('id'=>'branch','empty'=>'--------'))?>
+                 <?=CHtml::dropDownList('branch','',CHtml::listData($branches,'id','name'),array('id'=>'branch','disabled'=>true,'empty'=>'--------'))?>
                  </center>
                </td>
             </tr>
@@ -23,7 +23,9 @@
             </tr>
             <tr>
                <td>Telephone Number</td>
-               <td><input type=text id=customerPhone1 data-target=<?=$this->createUrl('orders/history&cid=')?>></td>
+               <td>
+                 <input type=text id=customerPhone1 data-target=<?=$this->createUrl('orders/history&cid=')?>>
+               </td>
                <td>Customer Name</td>
                <td>
                  <input type=text id=customerName>
@@ -34,15 +36,30 @@
                <td>
                  Customer Address
                </td>
-               <td colspan=3>
+               <td>
                  <input type=text id=customerAddress class=span7>
                  <input type=hidden id=customerGeocode class=span10 readonly=true>
+               </td>
+               <td colspan=2>
                  <?php $this->widget(
                  'bootstrap.widgets.TbButton',
                  array(
                    'label' => 'Store Locator',
                    'icon' => 'map-marker',
                    'htmlOptions' => array('id'=>'btnShowMap','data-target'=>$this->createUrl('map')),
+                 ));?>
+               </td>
+            </tr>
+            <tr>
+               <td>Card Number</td>
+               <td><input type=text id=cardNo class=span10></td>
+               <td colspan=2>
+                 <?php $this->widget(
+                 'bootstrap.widgets.TbButton',
+                 array(
+                   'label' => 'Verify',
+                   'icon' => 'check',
+                   'htmlOptions' => array('id'=>'btnVerifyCard','data-target'=>$this->createUrl('verify_card&card_no=')),
                  ));?>
                </td>
             </tr>
@@ -82,7 +99,7 @@
                  'bootstrap.widgets.TbTimePicker',
                  array(
                    'name' => 'delivery_time',
-                   'options'=>array('placement'=>'right','showMeridian' => false),
+                   'options'=>array('showMeridian' => false),
                    'htmlOptions'=>array('id'=>'delivery_time'),
                  )
                );?>
@@ -90,7 +107,7 @@
             </tr>
         </table>
       </div>
-      <div class="span5">
+      <div class="span5 well">
         <ul class=box-span>
           <?php foreach($menu as $m):?>
           <li>

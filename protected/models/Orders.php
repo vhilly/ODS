@@ -43,7 +43,7 @@ class Orders extends CActiveRecord
 		return array(
 			array('order_no, branch_id', 'required'),
 			array('branch_id, customer_id,is_advance, rider, status', 'numerical', 'integerOnly'=>true),
-			array('order_no, branch_name', 'length', 'max'=>100),
+			array('order_no, card_no,branch_name', 'length', 'max'=>100),
 			array('total_amt, bill_change,tax,total_charges,sub_total,total_discount', 'length', 'max'=>15),
 			array('remarks,special_instruction', 'length', 'max'=>255),
                         array('delivery_date, delivery_time', 'safe'),
@@ -66,6 +66,7 @@ class Orders extends CActiveRecord
 			'rider0' => array(self::BELONGS_TO, 'Riders', 'rider'),
 			'customer' => array(self::BELONGS_TO, 'Customers', 'customer_id'),
 			'branch' => array(self::BELONGS_TO, 'Branches', 'branch_id'),
+                        'cardNo' => array(self::BELONGS_TO,'CardHolder', 'card_no'),
 		);
 	}
 

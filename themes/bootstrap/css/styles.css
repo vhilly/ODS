@@ -20,21 +20,8 @@
 .navbar .brand {
 	padding:0 10px;
 	background:url("../img/shakeyslogo.png") no-repeat 15px 0;
-	height:40px;
+	height:45px;
 	width:200px;
-}
-.navbar .sub-brand {
-	height:40px;
-	width:150px;
-}
-.navbar .divider-vertical {
-	margin:0;
-}
-.navbar {
-	min-width:1050px;
-}
-.navbar .container {
-	min-width:1300px;
 }
 
 
@@ -308,6 +295,7 @@ list-style: none outside none;
 }
 .table tbody tr.overall-header >td {background-color:#BF0900;color:white;font-weight:bold;}
 .table thead tr.overall-header >th {background-color:#BF0900;color:white;font-weight:bold;}
+.table tbody tr.menu-header >th {background-color:#3366FF;color:white;font-weight:bold;}
 .item-header {background-color:#E88309;font-weight:bold;}
 .table tbody tr.item-header>td {background-color:#E88309;}
 .table thead tr.item-header>th {background-color:#E88309;}
@@ -324,4 +312,63 @@ list-style: none outside none;
 .curpoint{
   cursor:pointer;
 }
-body { background-color:#FFECBA;}
+body { background-color:#E8E8E8 ;}
+.modal { background-color:#FFECBA;}
+.modal-header { background-color:#E88309;}
+.modal-footer { background-color:#E88309;}
+.well { background-color:#FFECBA;}
+
+.navbar-inner {
+  background-color: #2c2c2c; /* fallback color, place your own */
+
+  /* Gradients for modern browsers, replace as you see fit */
+  background-image: -moz-linear-gradient(top, #BF0900 , #880000 );
+  background-image: -ms-linear-gradient(top, #BF0900 , #880000 );
+  background-image: -o-linear-gradient(top, #BF0900 , #880000 );
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#BF0900), to(#880000));
+  background-image: -webkit-linear-gradient(top, #BF0900, #880000);
+  background-image: linear-gradient(top, #333333, #222222);
+  background-repeat: repeat-x;
+
+  /* IE8-9 gradient filter */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+}
+
+/* menu items */
+
+/* set the background of the menu items to pink and default color to white */
+
+.navbar .nav > li > a {
+color: white;
+
+}
+
+
+/* set hover and focus to lightblue */
+.navbar .nav > li > a:focus,
+.navbar .nav > li > a:hover {
+background-color: #FFD700;
+color: black;
+}
+/* set active item to darkgreen */
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+
+background-color: #FFD700;
+color: black;
+}
+
+/* set font color and background of the project name (brand) */
+
+.navbar .brand
+{
+} 
+
+.navbar .divider-vertical {
+    margin: 0px;
+}
+.navbar .divider-vertical {
+    border-left: 1px solid black;
+    border-right: 1px solid gray;
+}

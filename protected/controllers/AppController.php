@@ -78,6 +78,7 @@
       $order->remarks=$_POST['order']['remarks'];
       $order->special_instruction=$_POST['order']['si'];
       $order->bill_change=$_POST['order']['bchange'];
+      $order->card_no=$_POST['order']['card_no'];
       $order->agent=Yii::app()->user->id;
       $customer='';
       if($_POST['customer']['id'])
@@ -99,9 +100,20 @@
             $orderItems->qty=$o->qty;
             $orderItems->price=$o->total_price;
             $orderItems->opts=$o->opts;
+            $orderItems->size=$o->size;
             $orderItems->menu_item_id=$o->item_id;
             $subTotal+=$orderItems->price;
             $orderItems->save();
+            if($o->opts){
+              foreach(json_decode($o->opts) as $op){
+                if($op){
+                  $ao=new OrderItemAddOns;
+                  $ao->order_item_id=$orderItems->id;
+                  $ao->add_on=$op;
+                  $ao->save();
+                }
+              }
+            }
           }
           $totalCharges=$subTotal * ($charges/100.0);
           $preTax= $totalCharges+$subTotal;
@@ -144,13 +156,15 @@
       if(isset($_POST['item'])){
          $cid=str_replace('.','',CHttpRequest::getUserHostAddress()).Yii::app()->user->id;
          $opts=isset($_POST['opts'])?json_encode($_POST['opts']):'';
+         $size=isset($_POST['item']['size'])?$_POST['item']['size']: '';
          $item_id=$_POST['item']['iid'];
          
-         $model=OrderTemp::model()->findByAttributes(array('client_id'=>$cid,'item_id'=>$item_id,'opts'=>$opts));
+         $model=OrderTemp::model()->findByAttributes(array('client_id'=>$cid,'item_id'=>$item_id,'size'=>$size,'opts'=>$opts));
          if(!$model)
            $model = new OrderTemp;
          $model->client_id=$cid;
          $model->item_id=$item_id;
+         $model->size=$size;
          $model->qty+=$_POST['item']['qty'];
          $model->orig_price+=$_POST['item']['totalPrice'];
          $model->total_price=$model->orig_price-$model->discount;
@@ -215,7 +229,12 @@
       $result = $command->queryAll();
       $this->renderPartial('markers',compact('result'));
     }
-
+    public function actionVerify_card($card_no){
+      $ch=CardHolder::model()->findByAttributes(array('card_no'=>$card_no));
+       if(!$ch)
+         throw new CHttpException(204, 'No Record found');
+      $this->renderPartial('card_holder',array('ch'=>$ch));
+    }
     public function actionStore(){
       $branch_id= Yii::app()->getModule('user')->user()->profile->branch;
       $store=Branches::model()->findByPk($branch_id);

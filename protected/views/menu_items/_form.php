@@ -18,10 +18,11 @@
 ?>
 <div class="row-fluid">
   <div class="span12">
-    <div class="row-fluid">
-      <div class="span4">
+    <div class="row-fluid well">
+      <div class="span8">
        <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
 	 'id'=>'menu-items-form',
+         'htmlOptions'=>array('class'=>'well'),
  	 'enableAjaxValidation'=>false,
        )); ?>
 
@@ -47,10 +48,11 @@
  	   'label'=>'Back',
          )); ?>
       <?php $this->endWidget(); ?>
+       </table>
       </div>
       <?php if(!$model->isNewRecord):?>
       <?php if($model->per_size):?>
-      <div class="span4">
+      <div class="span8">
          <table class='table table-order'>
            <thead>
              <tr class='overall-header'>
@@ -66,17 +68,21 @@
                <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_sizes/delete',array('id'=>$s->id))?>> <i class=icon-trash></i></a></td>
              </tr>
              <?php endforeach;?>
+             <tr>
+               <td>
+               <?php $this->widget('bootstrap.widgets.TbButton', array(
+	         'buttonType'=>'link',
+                 'url'=>$this->createUrl('item_sizes/create',array('iid'=>$model->id)),
+	         'type'=>'success',
+	         'label'=>'Add',
+                )); ?>
+               </td>
+             </tr>
            </tbody>
          </table>
-        <?php $this->widget('bootstrap.widgets.TbButton', array(
-	  'buttonType'=>'link',
-          'url'=>$this->createUrl('item_sizes/create',array('iid'=>$model->id)),
-	  'type'=>'warning',
-	  'label'=>'Add',
-        )); ?>
       </div>
       <?php endif;?>
-      <div class="span4">
+      <div class="span8">
          <table class='table table-order'>
            <thead>
              <tr class='overall-header'>
@@ -91,17 +97,21 @@
                <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_add_ons/delete',array('id'=>$a->id))?>> <i class=icon-trash></i></a></td>
              </tr>
              <?php endforeach;?>
+             <tr>
+               <td>
+               <?php $this->widget('bootstrap.widgets.TbButton', array(
+	         'buttonType'=>'link',
+                 'url'=>$this->createUrl('item_add_ons/create',array('iid'=>$model->id)),
+	         'type'=>'success',
+	         'label'=>'Add',
+               )); ?>
+               </td>
+             </tr>
            </tbody>
          </table>
-        <?php $this->widget('bootstrap.widgets.TbButton', array(
-	  'buttonType'=>'link',
-          'url'=>$this->createUrl('item_add_ons/create',array('iid'=>$model->id)),
-	  'type'=>'warning',
-	  'label'=>'Add',
-        )); ?>
       </div>
 
-      <div class="span4">
+      <div class="span8">
          <table class='table table-order'>
            <thead>
              <tr class='overall-header'>
@@ -116,15 +126,19 @@
                <td><?=$c->qty?> pcs</td>
                <td><a class='btn deleteThis' data-target=<?=$this->createUrl('item_checklist/delete',array('id'=>$c->id))?>> <i class=icon-trash></i></a></td>
              </tr>
+             <tr>
+               <td>
+               <?php $this->widget('bootstrap.widgets.TbButton', array(
+	         'buttonType'=>'link',
+                 'url'=>$this->createUrl('item_checklist/create',array('iid'=>$model->id)),
+	         'type'=>'success',
+	         'label'=>'Add',
+               )); ?>
+               </td>
+             </tr>
              <?php endforeach;?>
            </tbody>
          </table>
-        <?php $this->widget('bootstrap.widgets.TbButton', array(
-	  'buttonType'=>'link',
-          'url'=>$this->createUrl('item_checklist/create',array('iid'=>$model->id)),
-	  'type'=>'warning',
-	  'label'=>'Add',
-        )); ?>
       </div>
       <?php endif;?>
     </div>

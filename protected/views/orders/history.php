@@ -22,12 +22,19 @@
     </tr>
   </table>
   <?php foreach($orders as $o):?>
-  <h6>DATE: <?=$o->date_ordered?> BRANCH: <?=$o->branch->name?></h6>
+  <h6 <?=($o->status<4 && $o->status>-1)?'style=color:red':''?>>DATE: <?=$o->date_ordered?> BRANCH: <?=$o->branch->name?></h6>
   <table class='table  table-order table-bordered'>
     <thead>
+      <?php if($o->status<4 && $o->status>-1):?>
       <tr class=overall-header>
-        <th colspan=5><center>Order Details</center></th>
+          <th colspan=1><center>Pending Order</center></th>
+          <th colspan=2><a class='btn followUp' data-order_id=<?=$o->id?> data-target=<?=$this->createUrl('follow_up&id=')?>>Follow Up</a></th>
       </tr>
+      <?php else:?>
+      <tr class=green>
+          <th colspan=3><center>Order Details</center></th>
+      </tr>
+      <?php endif;?>
       <tr class='item-header'>
         <th>Description</th>
         <th>Qty</th>
@@ -37,7 +44,16 @@
     <tbody>
     <?php foreach($o->orderItems as $oi):?>
       <tr>
-        <td><?=$oi->menuItem->description?></td>
+        <td>
+          <?=$oi->menuItem->description?>
+          <?=$oi->size?'('.$oi->size0->name.')':''?>
+          <?php if($oi->addOns):?>
+            <?php foreach($oi->addOns as $ao):?>
+              (<?=$ao->addOn->size->name?>
+              <?=$ao->addOn->addOn->description?>)
+            <?php endforeach;?>
+          <?php endif;?>
+        </td>
         <td><?=$oi->qty?></td>
         <td><?=number_format($oi->price,2)?></td>
       </tr>
@@ -53,6 +69,9 @@
   </table>
   <p>
   Remarks:<?=$o->remarks?>
+  </p>
+  <p>
+  Special Instructions:<?=$o->special_instruction?>
   </p>
   <?php endforeach;?>
 <?php endif;?>

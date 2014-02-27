@@ -33,7 +33,7 @@ class OrderTemp extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('client_id, item_id, qty, total_price, opts', 'required'),
-			array('item_id, qty', 'numerical', 'integerOnly'=>true),
+			array('item_id, qty,size', 'numerical', 'integerOnly'=>true),
 			array('client_id', 'length', 'max'=>255),
 			array('total_price,orig_price,discount', 'length', 'max'=>20),
 			array('discount_code', 'length', 'max'=>10),

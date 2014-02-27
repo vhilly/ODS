@@ -1,28 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "order_items".
+ * This is the model class for table "promo_cards".
  *
- * The followings are the available columns in table 'order_items':
+ * The followings are the available columns in table 'promo_cards':
  * @property integer $id
- * @property integer $order_id
- * @property integer $menu_item_id
- * @property integer $qty
- * @property string $price
- * @property string $opts
+ * @property string $name
+ * @property string $description
+ * @property string $mechanics
  *
  * The followings are the available model relations:
- * @property Orders $order
- * @property MenuItems $menuItem
+ * @property CardHolder[] $cardHolders
  */
-class OrderItems extends CActiveRecord
+class PromoCards extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'order_items';
+		return 'promo_cards';
 	}
 
 	/**
@@ -33,13 +30,12 @@ class OrderItems extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('order_id, menu_item_id, qty', 'required'),
-			array('order_id,size, menu_item_id, qty', 'numerical', 'integerOnly'=>true),
-			array('price', 'length', 'max'=>15),
-			array('opts', 'length', 'max'=>100),
+			array('name', 'required'),
+			array('name, description', 'length', 'max'=>100),
+			array('mechanics', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, order_id, menu_item_id, qty, price, opts', 'safe', 'on'=>'search'),
+			array('id, name, description, mechanics', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,11 +47,7 @@ class OrderItems extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'addOns' => array(self::HAS_MANY, 'OrderItemAddOns', 'order_item_id'),
-			'order' => array(self::BELONGS_TO, 'Orders', 'order_id'),
-			'size0' => array(self::BELONGS_TO, 'Sizes', 'size'),
-			'menuItem' => array(self::BELONGS_TO, 'MenuItems', 'menu_item_id'),
-			'itemCheckList' => array(self::BELONGS_TO, 'ItemChecklist',array('menu_item_id'=>'item_id')),
+			'cardHolders' => array(self::HAS_MANY, 'CardHolder', 'card_type'),
 		);
 	}
 
@@ -66,11 +58,9 @@ class OrderItems extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'order_id' => 'Order',
-			'menu_item_id' => 'Menu Item',
-			'qty' => 'Qty',
-			'price' => 'Price',
-			'opts' => 'Opts',
+			'name' => 'Name',
+			'description' => 'Description',
+			'mechanics' => 'Mechanics',
 		);
 	}
 
@@ -93,11 +83,9 @@ class OrderItems extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('order_id',$this->order_id);
-		$criteria->compare('menu_item_id',$this->menu_item_id);
-		$criteria->compare('qty',$this->qty);
-		$criteria->compare('price',$this->price,true);
-		$criteria->compare('opts',$this->opts,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('mechanics',$this->mechanics,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -108,7 +96,7 @@ class OrderItems extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return OrderItems the static model class
+	 * @return PromoCards the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

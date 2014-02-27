@@ -18,8 +18,13 @@
       <td colspan=3><?=$orders->customer->address?></td>
     </tr>
     <tr class=overall-header>
-      <th colspan=5><center>Order Info</center></th>
+      <th colspan=5><center>Order # <?=$orders->id?></center></th>
     </tr>
+    <?php if($orders->card_no):?>
+    <tr>
+      <td colspan=2 bgcolor=#0099FF><?=$orders->cardNo->card->name?></td><td bgcolor=#0099FF><button class="btn btn-inverse btnCardHolder" data-card_no=<?=$orders->card_no?> data-target=<?=$this->createUrl('app/verify_card&card_no=')?>>#<?=$orders->card_no?></button></td>
+    </tr>
+    <?php endif;?>
     <tr class='item-header'>
       <th>Description</th>
       <th>Qty</th>
@@ -34,7 +39,16 @@
     <?php $checkList[$o->itemCheckList->miscItem->name]+=$o->itemCheckList->qty*$o->qty;?>
     <?php endif;?>
     <tr>
-      <td><?=$o->menuItem->description?></td>
+      <td>
+        <?=$o->menuItem->description?>
+        <?=$o->size?'('.$o->size0->name.')':''?>
+        <?php if($o->addOns):?>
+          <?php foreach($o->addOns as $ao):?>
+            (<?=$ao->addOn->size->name?>
+            <?=$ao->addOn->addOn->description?>)
+          <?php endforeach;?>
+        <?php endif;?>
+      </td>
       <td><?=$o->qty?></td>
       <td><?=number_format($o->price,2)?></td>
     </tr>
@@ -65,6 +79,8 @@
   </tfoot>
 </table>
 <p>
+Special Instructions:<?=$orders->special_instruction?>
+<br>
 Remarks:<?=$orders->remarks?>
 <br>
 Bill Change:<?=$orders->bill_change?>

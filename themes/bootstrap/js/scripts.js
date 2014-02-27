@@ -75,7 +75,49 @@ $(document).ready(function() {
   $('#btnShowMap').click(function(){
     return windowpop($(this).data('target'), 1000, 600);
   });
+  $('#btnVerifyCard').click(function(){
+    var cardNo=$('#cardNo').val(),SI= $('#orderSI').val();
+    $.ajax({
+      url:$(this).data('target')+cardNo,
+      statusCode: {
+        200: function(data) {
+          if(SI.indexOf(cardNo)<0)
+            $('#orderSI').val(SI+' -Check for card (#'+cardNo+')');
+            $('#contentModal .modal-header h4').html('');
+            $('#contentModal .modal-footer').html('');
+            $('#contentModal .modal-body').html(data);
+            $('#contentModal').modal();
+        },
+        204: function() {
+         alert( "No record found" );
+         $('#orderSI').val('');
+        },
+        500: function() {
+         alert( this.url );
+        }
+      }
+    });
+  });
 
+  $(document).on('click','.btnCardHolder',function(){
+    $.ajax({
+      url:$(this).data('target')+$(this).data('card_no'),
+      statusCode: {
+        200: function(data) {
+            $('#contentModal .modal-header h4').html('&nbsp;');
+            $('#contentModal .modal-footer').html('');
+            $('#contentModal .modal-body').html(data);
+            $('#contentModal').modal();
+        },
+        204: function() {
+         alert( "No record found" );
+        },
+        500: function() {
+         alert( this.url );
+        }
+      }
+    });
+  });
 
   $('#branch').change(function(){
     if($(this).val())
@@ -99,6 +141,8 @@ $(document).ready(function() {
           $('#customerAddress').val($('#contentModal .modal-body #customer_address').html());
           $('#customerID').val($('#contentModal .modal-body #customer_id').html());
 
+        }else{
+          $('#customerID').val('');
         }
       },
       error:function(){
@@ -125,7 +169,7 @@ $(document).ready(function() {
      if(confirm('Are you sure?')){
        if($("#currentOrders tr").html()){
         var order ={bid:$('#branch').val(),bname:$('#branch option:selected').text(),remarks:$('#orderRemarks').val(),si:$('#orderSI').val(),bchange:$('#orderBillChange').val(),
-         delivery_date:$('#delivery_date').val(),delivery_time:$('#delivery_time').val()}
+         delivery_date:$('#delivery_date').val(),delivery_time:$('#delivery_time').val(),card_no:$('#cardNo').val()}
         var customer = {id:$('#customerID').val(),name:$('#customerName').val(),phone1:$('#customerPhone1').val(),address:$('#customerAddress').val(),geocode:$('#customerGeocode').val()};
         $.post($(this).data('target'), 
          { customer:customer,order:order }).done(function( data ) {
@@ -184,6 +228,16 @@ $(document).ready(function() {
     }
   });
 
+  $(document.body).on("click", '.followUp', function(){
+      $.ajax({
+        url:$(this).data('target')+$(this).data('order_id'),
+        success:function(data){
+        },
+        error:function(){
+         alert(this.url);
+        }
+      });
+  });
 
 });
   var socket = io.connect('http://172.31.1.112:8000');
@@ -222,6 +276,7 @@ $(document).ready(function() {
     },cache:false});
   };
   function clearData(){
+    $('#orderSI').val('');
     $('#branch').val('');
     $('#branch').change();
     $('#orderRemarks').val('');

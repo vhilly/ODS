@@ -1,15 +1,15 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="row-fluid">
-      <div class="span4">
+      <div class="span4 well">
         <table class='table table-order table-bordered'>
           <tbody>
              <tr class='overall-header'><td colspan=2>Summary for: <?=date('d-m-Y')?></td></tr>
           </tbody>
         </table>
-        <div style='position:fixed;width:450px;height:80%;overflow:auto' id=orderDetails></div>
+        <div style='position:fixed;width:480px;height:80%;overflow:auto' id=orderDetails></div>
       </div>
-      <div class="span8">
+      <div class="span8 well">
         <table class='table table-order table-bordered'>
           <thead>
             <tr class='overall-header'>
