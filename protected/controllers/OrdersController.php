@@ -69,13 +69,16 @@ return array(
     $model->save();
   }
   public function actionHistory($cid){
+    $tax='12';
+    $charges='10';
     //$cust=Customers::model()->with('orders.orderItems')->findByAttributes(array('phone_1'=>$cid)));
     $cust=Customers::model()->findByAttributes(array('phone_1'=>$cid));
     if($cust){
       $freq=Orders::model()->frequentFoodOrder($cust->id);
+      $avg=Orders::model()->averageSpending($cust->id);
       $orders=Orders::model()->with(array('orderItems.addOns'))->findAllByAttributes(array('customer_id'=>$cust->id),array('condition'=>'status > -1','limit'=>5,'order'=>'id DESC'));
     }
-    $this->renderPartial('history',compact('cust','orders','freq'));
+    $this->renderPartial('history',compact('cust','orders','freq','avg','charges','tax'));
   }
   public function loadModel($id,$rel=null){
     if($rel)

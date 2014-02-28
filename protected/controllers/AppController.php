@@ -63,6 +63,7 @@
       if(isset($_POST['customer']) && $orders){
       $tax='12';
       $charges='10';
+      $total_discount='0';
       $order=new Orders;
       $order->order_no='12332';
 
@@ -100,6 +101,10 @@
             $orderItems->order_id=$order->id;
             $orderItems->qty=$o->qty;
             $orderItems->price=$o->total_price;
+            $orderItems->orig_price=$o->orig_price;
+            $orderItems->discount=$o->discount;
+            $total_discount+=$o->discount;
+            $orderItems->discount_code=$o->discount_code;
             $orderItems->opts=$o->opts;
             $orderItems->size=$o->size;
             $orderItems->menu_item_id=$o->item_id;
@@ -117,12 +122,13 @@
             }
           }
           $totalCharges=$subTotal * ($charges/100.0);
-          $preTax= $totalCharges+$subTotal;
+          $preTax= $subTotal+$totalCharges;
           $VAT=$preTax * ($tax/100.0);
           $grandTotal=$preTax + $VAT;
 
           $order->sub_total=$subTotal;
           $order->total_charges=$totalCharges;
+          $order->total_discount=$total_discount;
           $order->tax=$VAT;
           $order->total_amt=$grandTotal;
           $order->save();
@@ -136,8 +142,14 @@
     }
     public function actionOrder_discount(){
       Yii::import('bootstrap.widgets.TbEditableSaver');
-      $es = new TbEditableSaver('OrderTemp');
-      $es->update();
+      if(!empty($_POST['value'])){
+        $val=explode(':',$_POST['value']);
+        $newPrice = new CDbExpression('(`orig_price`-:discount)',array(
+          ':discount' => $val[0])
+        );
+        OrderTemp::model()->updateByPk($_POST['pk'],array('discount_code'=>$val[1],'discount'=>$val[0],'total_price'=>$newPrice));
+      }
+      //$es->update();
     }
     public function actionOrder_delete($id){
       if($id){

@@ -30,7 +30,7 @@
                  <?php endif;?>
                 </td>
                 <td>
-                  <a href="#" rel="OrderTemp_discount_code" data-target="#<?=$o->id?>"  data-pk="<?=$o->id?>"></a>
+                  <a href="#" rel="OrderTemp_discount_code" data-target="#<?=$o->id?>"  data-pk="<?=$o->id?>"><?=$o->discount_code?></a>
                 </td>
                 <td><?=$o->qty?></td>
                 <td id="<?=$o->id?>_op"><?=$o->orig_price?></td>
@@ -40,7 +40,7 @@
             <?php endforeach;?>
             <?php
              $totalCharges=$st * ($charges/100.0);
-             $preTax= $totalCharges+$st;
+             $preTax= $st+$totalCharges;
              $VAT=$preTax * ($tax/100.0);
              $grandTotal=$preTax + $VAT;
             ?>
@@ -55,7 +55,7 @@
                <td><?=number_format($totalCharges,2)?></td>
             </tr>
             <tr>
-               <td colspan=5>Discount</td>
+               <td colspan=5>Total Discount</td>
                <td><?=number_format($totalDiscount,2)?></td>
             </tr>
             <tr>
@@ -73,7 +73,7 @@
 jQuery('[data-toggle=popover]').popover();
 jQuery('body').tooltip({"selector":"[data-toggle=tooltip]"});
 $('a[rel=OrderTemp_discount_code]').on('save',  function(event, params) {
-    $($(this).data('target')+'_tp').html('tets');
+     updateOrderList();
     }).editable({'datepicker':{'language':'en'},'type':'select2','url':'/ODS/index.php?r=app/order_discount','name':'discount_code','title':'Enter Discount Code','mode':'popup','placement':'bottom','emptytext':'Empty','inputclass':'input-medium','source':[{'value':'20:P20','text':'P20'},{'value':'10:P10','text':'P10'}],'success': function(response, newValue) {
 console.log(response);
     }});

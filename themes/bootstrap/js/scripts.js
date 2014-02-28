@@ -91,6 +91,7 @@ $(document).ready(function() {
         204: function() {
          alert( "No record found" );
          $('#orderSI').val('');
+         $('#cardNo').val('');
         },
         500: function() {
          alert( this.url );
@@ -278,6 +279,7 @@ $(document).ready(function() {
   };
   function clearData(){
     $('#orderSI').val('');
+    $('#cardNo').val('');
     $('#branch').val('');
     $('#branch').change();
     $('#orderRemarks').val('');

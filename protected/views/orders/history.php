@@ -20,6 +20,10 @@
       <td>Frequent Food Order</td>
       <td><?=implode(',',array_map('array_shift',$freq));?></td>
     </tr>
+    <tr>
+      <td>Average Spending</td>
+      <td>P<?=number_format($avg[0],2)?></td>
+    </tr>
   </table>
   <?php foreach($orders as $o):?>
   <h6 <?=($o->status<4 && $o->status>-1)?'style=color:red':''?>>DATE: <?=$o->date_ordered?> BRANCH: <?=$o->branch->name?></h6>
@@ -42,7 +46,10 @@
       </tr>
     </thead>
     <tbody>
+    <?php $st=0;$totalDiscount=0;?>
     <?php foreach($o->orderItems as $oi):?>
+    <?php $st+=$oi->price;?>
+    <?php $totalDiscount+=$oi->discount;?>
       <tr>
         <td>
           <?=$oi->menuItem->description?>
@@ -57,11 +64,32 @@
         <td><?=$oi->qty?></td>
         <td><?=number_format($oi->price,2)?></td>
       </tr>
-      <?php ?>
     <?php endforeach;?>
+    <?php
+      $totalCharges=$st * ($charges/100.0);
+      $preTax= $st+$totalCharges;
+      $VAT=$preTax * ($tax/100.0);
+      $grandTotal=$preTax + $VAT;
+    ?>
     </tbody>
     <tfoot>
+      <tr class=red>
+        <td colspan=2>Subtotal</td>
+        <td><?=number_format($st,2)?></td>
+      </tr>
       <tr class=green>
+        <td colspan=2>Charges (<?=$charges?>%)</td>
+        <td><?=number_format($totalCharges,2)?></td>
+      </tr>
+      <tr class=red>
+        <td colspan=2>Total Discount</td>
+        <td colspan=2><?=number_format($totalDiscount,2)?></td>
+      </tr>
+      <tr class=green>
+        <td colspan=2>VAT (<?=$tax?>%)</td>
+        <td><?=number_format($VAT,2)?></td>
+      </tr>
+      <tr class=red>
         <td colspan=2><center>Grand Total</center></td>
         <td><?=$o->total_amt?></td>
       </tr>

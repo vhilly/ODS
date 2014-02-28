@@ -166,4 +166,13 @@ class Orders extends CActiveRecord
         ->limit($limit)->queryAll();
        
     }
+    public function averageSpending($cid){
+      $from='';
+      $where='';
+      return Yii::app()->db->createCommand()
+        ->select('AVG(total_amt) avg')
+        ->where('status=4 AND customer_id='.$cid)
+        ->from("orders")->queryColumn();
+       
+    }
 }
